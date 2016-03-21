@@ -183,7 +183,7 @@
               "diskSizeGB": "[parameters('sizeOfEachDataDiskInGB')]",
               "lun": 0,
               "vhd": {
-                "Uri": "variables('dataDisk1VhdName')]"
+                "Uri": "[variables('dataDisk1VhdName')]"
               },
               "createOption": "Empty"
             }
