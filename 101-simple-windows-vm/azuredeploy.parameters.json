@@ -14,7 +14,7 @@
     "dnsNameForPublicIP": {
       "value": "pnsyxz1234"
     },
-    "localtion": {
+    "location": {
       "value": "West US"
     },
     "sizeOfDiskInGB":{
