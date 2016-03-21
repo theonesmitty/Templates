@@ -73,8 +73,8 @@
     "virtualNetworkName": "MyVNET",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
-    "dataDisk1VhdName": "[concat('http://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('vmName'),'dataDisk1.vhd')]"
-  },
+    "dataDisk1VhdName": "[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('vmName'),'dataDisk1.vhd')]"
+  },                             
   "resources": [
     {
       "type": "Microsoft.Storage/storageAccounts",
@@ -172,7 +172,7 @@
           "osDisk": {
             "name": "osdisk",
             "vhd": {
-              "uri": "[concat('http://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"
+              "uri": "[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -199,7 +199,7 @@
         "diagnosticsProfile": {
           "bootDiagnostics": {
              "enabled": "true",
-             "storageUri": "[concat('http://',parameters('newStorageAccountName'),'.blob.core.windows.net')]"
+             "storageUri": "[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net')]"
           }
         }
       }
