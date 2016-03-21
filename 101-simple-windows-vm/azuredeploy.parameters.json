@@ -3,16 +3,22 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "newStorageAccountName": {
-      "value": "myStorageAccount"
+      "value": "pnsstore1"
     },
     "adminUsername": {
-      "value": "admin123"
+      "value": "psmith"
     },
     "adminPassword": {
-      "value": "ADmin123_!"
+      "value": "Kapper99"
     },
     "dnsNameForPublicIP": {
-      "value": "myDnsName"
+      "value": "pnsyxz1234"
+    },
+    "localtion": {
+      "value": "West US"
+    },
+    "sizeOfDiskInGB":{
+      "value": "20"
     }
   }
 }
