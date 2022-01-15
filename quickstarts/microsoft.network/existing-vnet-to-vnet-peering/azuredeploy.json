@@ -1,0 +1,48 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.1008.15138",
+      "templateHash": "17718844949536163305"
+    }
+  },
+  "parameters": {
+    "existingLocalVirtualNetworkName": {
+      "type": "string",
+      "metadata": {
+        "description": "Set the local VNet name"
+      }
+    },
+    "existingRemoteVirtualNetworkName": {
+      "type": "string",
+      "metadata": {
+        "description": "Set the remote VNet name"
+      }
+    },
+    "existingRemoteVirtualNetworkResourceGroupName": {
+      "type": "string",
+      "metadata": {
+        "description": "Sets the remote VNet Resource group"
+      }
+    }
+  },
+  "functions": [],
+  "resources": [
+    {
+      "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+      "apiVersion": "2021-02-01",
+      "name": "[format('{0}/peering-to-remote-vnet', parameters('existingLocalVirtualNetworkName'))]",
+      "properties": {
+        "allowVirtualNetworkAccess": true,
+        "allowForwardedTraffic": false,
+        "allowGatewayTransit": false,
+        "useRemoteGateways": false,
+        "remoteVirtualNetwork": {
+          "id": "[resourceId(parameters('existingRemoteVirtualNetworkResourceGroupName'), 'Microsoft.Network/virtualNetworks', parameters('existingRemoteVirtualNetworkName'))]"
+        }
+      }
+    }
+  ]
+}
