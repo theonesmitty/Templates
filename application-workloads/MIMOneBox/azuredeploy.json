@@ -158,18 +158,7 @@
         "description": "Size of the virtual machine."
       }
     },
-    "zone": {
-      "type": "string",
-      "defaultValue": "1",
-      "allowedValues": [
-        "1",
-        "2",
-        "3"
-      ],
-      "metadata": {
-        "description": "Availability zone number."
-      }
-    },
+
     "enableAcceleratedNetworking": {
       "type": "bool",
       "defaultValue": true,
