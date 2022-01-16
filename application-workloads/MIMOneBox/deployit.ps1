@@ -13,7 +13,7 @@ $params.Add("adminUsername", $administratorLogin)
 $params.Add("adminPassword", $administratorLoginPassword)
 $params.Add("domainName", $domainName)
 $params.Add("dnsPrefix", $domainPrefix)
-$params.Add("imageOffer", "SQL2016SP1-WS2016")
+#$params.Add("imageOffer", "SQL2016SP1-WS2016")
 
 New-AzResourceGroup `
   -Name $resourceGroupName `
@@ -37,5 +37,5 @@ else {
   Remove-AzResourceGroup -AsJob  $resourceGroupName -Force 
 
 }
-
+Write-Host ($resourceGroupName + "_Deployment")
 #Get-AzResourceGroup | ? {$_.ResourceGroupName -like "bicep*"} | Remove-AzResourceGroup -force -AsJob
