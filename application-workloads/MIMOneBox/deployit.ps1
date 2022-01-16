@@ -3,7 +3,7 @@ $rnd = (Get-Random -Minimum 100 -Maximum 999)
 $resourceGroupName = "bicepRG1" + $rnd
 $domainPrefix = "smittynet1" + $rnd
 $domainName = $domainPrefix + ".net"
-$templatePath = "https://raw.githubusercontent.com/theonesmitty/Templates/master/application-workloads/MIMOneBox/azuredeploy.json"
+$templatePath = "https://raw.githubusercontent.com/theonesmitty/Templates/master/application-workloads/MIMOneBox/x.json"
 $administratorLogin = "paulsmith"
 $administratorLoginPassword = ConvertTo-SecureString 'Kapper99!!22' -AsPlainText -Force
 
