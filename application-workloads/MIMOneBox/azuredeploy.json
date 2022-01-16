@@ -259,9 +259,6 @@
         "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic', parameters('vmName')))]"
 
             ],
-      "zones": [
-        "[parameters('zone')]"
-      ],
       "properties": {
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
