@@ -61,6 +61,27 @@
         "description": "Name for the subnet in the virtual network where the network interface is connected."
       }
     },
+    "subnetRange": {
+    "type": "string",
+    "defaultValue": "10.0.0.0/24",
+    "metadata": {
+        "description": "Subnet IP range."
+    }
+},
+        "privateIPAddress": {
+            "type": "string",
+            "defaultValue": "10.0.0.4",
+            "metadata": {
+                "description": "Private IP address."
+            }
+        },
+        "virtualNetworkAddressRange": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+                "description": "Virtual network address range."
+            }
+        },
     "networkSecurityGroupName": {
       "type": "string",
       "defaultValue": "nsg",
@@ -308,18 +329,16 @@
           }
         }
       },
-      "dependsOn": [
-        "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic', parameters('vmName')))]"
-      ]
-    },
-    "resources": [
-            {
+
+    
+        "resources": [
+                {
                     "type": "extensions",
                     "apiVersion": "2019-03-01",
                     "name": "CreateADForest",
                     "location": "[parameters('location')]",
                     "dependsOn": [
-                        "[parameters('virtualMachineName')]"
+                        "[parameters('vmName')]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Powershell",
@@ -344,55 +363,56 @@
                         }
                     }
                 }
-            ]   
-        
-            {
-            "type": "Microsoft.Compute/virtualMachines/extensions",
-            "apiVersion": "2021-07-01",
-            "name": "[format('{0}/{1}', parameters('vmName'), 'AzurePolicyforWindows')]",
-            "location": "[parameters('location')]",
-            "properties": {
-                "publisher": "Microsoft.GuestConfiguration",
-                "type": "ConfigurationforWindows",
-                "typeHandlerVersion": "1.0",
-                "autoUpgradeMinorVersion": true,
-                "enableAutomaticUpgrade": true
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
-            ]
-            },
-            {
-            "type": "Microsoft.GuestConfiguration/guestConfigurationAssignments",
-            "apiVersion": "2020-06-25",
-            "scope": "[format('Microsoft.Compute/virtualMachines/{0}', parameters('vmName'))]",
+            ]  
+   
+    },
+        {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2021-07-01",
+        "name": "[format('{0}/{1}', parameters('vmName'), 'AzurePolicyforWindows')]",
+        "location": "[parameters('location')]",
+        "properties": {
+            "publisher": "Microsoft.GuestConfiguration",
+            "type": "ConfigurationforWindows",
+            "typeHandlerVersion": "1.0",
+            "autoUpgradeMinorVersion": true,
+            "enableAutomaticUpgrade": true
+        },
+        "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+        ]
+        },
+        {
+        "type": "Microsoft.GuestConfiguration/guestConfigurationAssignments",
+        "apiVersion": "2020-06-25",
+        "scope": "[format('Microsoft.Compute/virtualMachines/{0}', parameters('vmName'))]",
+        "name": "AzureWindowsBaseline",
+        "location": "[parameters('location')]",
+        "properties": {
+            "guestConfiguration": {
+            "assignmentType": "ApplyAndMonitor",
             "name": "AzureWindowsBaseline",
-            "location": "[parameters('location')]",
-            "properties": {
-                "guestConfiguration": {
-                "assignmentType": "ApplyAndMonitor",
-                "name": "AzureWindowsBaseline",
-                "version": "1.*"
-                }
+            "version": "1.*"
+            }
+        },
+        "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+        ]
+        },
+        {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2018-11-01",
+        "name": "UpdateVNetDNS",
+        "dependsOn": [
+            "CreateADForest"
+        ],
+        "properties": {
+            "mode": "Incremental",
+            "templateLink": {
+                "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/vnet-with-dns-server.json', parameters('_artifactsLocationSasToken')))]",
+                "contentVersion": "1.0.0.0"
             },
-            "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
-            ]
-            },
-                    {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2018-11-01",
-            "name": "UpdateVNetDNS",
-            "dependsOn": [
-                "CreateADForest"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/vnet-with-dns-server.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
+            "parameters": {
                     "virtualNetworkName": {
                         "value": "[parameters('virtualNetworkName')]"
                     },
@@ -415,8 +435,8 @@
                     }
                 }
             }
-        }
+        }       
 
-        ]//top Resources
-    }
+    ]//top Resources
+}
 
