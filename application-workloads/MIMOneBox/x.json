@@ -214,7 +214,7 @@
                     },
                     "dataDisks": [
                         {
-                            "name": "[concat(parameters('virtualMachineName'), '_DataDisk')]",
+                            "name": "[concat(parameters('virtualMachineName'), '_DataDisk0')]",
                             "caching": "ReadWrite",
                             "createOption": "Empty",
                             "diskSizeGB": 20,
@@ -222,6 +222,26 @@
                                 "storageAccountType": "StandardSSD_LRS"
                             },
                             "lun": 0
+                        },
+                                                {
+                            "name": "[concat(parameters('virtualMachineName'), '_DataDisk1')]",
+                            "caching": "ReadWrite",
+                            "createOption": "Empty",
+                            "diskSizeGB": 20,
+                            "managedDisk": {
+                                "storageAccountType": "StandardSSD_LRS"
+                            },
+                            "lun": 1
+                        },
+                                                {
+                            "name": "[concat(parameters('virtualMachineName'), '_DataDisk2')]",
+                            "caching": "ReadWrite",
+                            "createOption": "Empty",
+                            "diskSizeGB": 20,
+                            "managedDisk": {
+                                "storageAccountType": "StandardSSD_LRS"
+                            },
+                            "lun": 2
                         }
                     ]
                 },

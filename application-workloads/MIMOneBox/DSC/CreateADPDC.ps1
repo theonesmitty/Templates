@@ -65,8 +65,34 @@ configuration CreateADPDC
 
         xDisk ADDataDisk {
             DiskNumber = 2
-            DriveLetter = "F"
+            DriveLetter = "D"
             DependsOn = "[xWaitForDisk]Disk2"
+        }
+
+        xWaitforDisk Disk3
+        {
+            DiskNumber = 3
+            RetryIntervalSec =$RetryIntervalSec
+            RetryCount = $RetryCount
+        }
+
+        xDisk ADDataDisk {
+            DiskNumber = 3
+            DriveLetter = "E"
+            DependsOn = "[xWaitForDisk]Disk3"
+        }
+
+        xWaitforDisk Disk4
+        {
+            DiskNumber = 4
+            RetryIntervalSec =$RetryIntervalSec
+            RetryCount = $RetryCount
+        }
+
+        xDisk ADDataDisk {
+            DiskNumber = 4
+            DriveLetter = "F"
+            DependsOn = "[xWaitForDisk]Disk4"
         }
 
         WindowsFeature ADDSInstall 
@@ -95,9 +121,9 @@ configuration CreateADPDC
             DomainName = $DomainName
             DomainAdministratorCredential = $DomainCreds
             SafemodeAdministratorPassword = $DomainCreds
-            DatabasePath = "F:\NTDS"
-            LogPath = "F:\NTDS"
-            SysvolPath = "F:\SYSVOL"
+            DatabasePath = "c:\NTDS"
+            LogPath = "c:\NTDS"
+            SysvolPath = "c:\SYSVOL"
 	        DependsOn = @("[xDisk]ADDataDisk", "[WindowsFeature]ADDSInstall")
         } 
 
