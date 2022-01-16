@@ -109,7 +109,95 @@
             "metadata": {
                 "description": "Subnet IP range."
             }
-        }
+        },
+        "imageOffer": {
+      "type": "String",
+      "defaultValue": "SQL2016SP1-WS2016",
+      "allowedValues": [
+        "sql2019-ws2019",
+        "sql2017-ws2019",
+        "SQL2017-WS2016",
+        "SQL2016SP1-WS2016",
+        "SQL2016SP2-WS2016",
+        "SQL2014SP3-WS2012R2",
+        "SQL2014SP2-WS2012R2"
+      ],
+      "metadata": {
+        "description": "Windows Server and SQL Offer"
+      }
+    },
+    "sqlSku": {
+      "type": "String",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Standard",
+        "Enterprise",
+        "SQLDEV",
+        "Web",
+        "Express"
+      ],
+      "metadata": {
+        "description": "SQL Server Sku"
+      }
+    },
+    "sqlDataDisksCount": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1,
+      "maxValue": 8,
+      "metadata": {
+        "description": "Amount of data disks (1TB each) for SQL Data files"
+      }
+    },
+    "dataPath": {
+      "type": "String",
+      "defaultValue": "F:\\SQLData",
+      "metadata": {
+        "description": "Path for SQL Data files. Please choose drive letter from F to Z, and other drives from A to E are reserved for system"
+      }
+    },
+    "sqlLogDisksCount": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1,
+      "maxValue": 8,
+      "metadata": {
+        "description": "Amount of data disks (1TB each) for SQL Log files"
+      }
+    },
+    "logPath": {
+      "type": "String",
+      "defaultValue": "G:\\SQLLog",
+      "metadata": {
+        "description": "Path for SQL Log files. Please choose drive letter from F to Z and different than the one used for SQL data. Drive letter from A to E are reserved for system"
+      }
+    },
+        "storageWorkloadType": {
+      "type": "String",
+      "defaultValue": "General",
+      "allowedValues": [
+        "General",
+        "OLTP",
+        "DW"
+      ],
+      "metadata": {
+        "description": "SQL Server Workload Type"
+      }
+    }
+    },
+    "variables":  {
+    "diskConfigurationType": "NEW",
+    "dataDisksLuns": "[array(range(0 ,parameters('sqlDataDisksCount')))]",
+    "logDisksLuns": "[array(range(parameters('sqlDataDisksCount'), parameters('sqlLogDisksCount')))]",
+    "dataDisks": {
+      "createOption": "empty",
+      "caching": "ReadOnly",
+      "writeAcceleratorEnabled": false,
+      "storageAccountType": "Premium_LRS",
+      "diskSizeGB": 1023
+    },
+    "tempDbPath": "D:\\SQLTemp"
+
     },
     "resources": [
         {
@@ -197,53 +285,35 @@
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPassword')]"
                 },
-                "storageProfile": {
-                    "imageReference": {
-                        "publisher": "MicrosoftWindowsServer",
-                        "offer": "WindowsServer",
-                        "sku": "2016-Datacenter",
-                        "version": "latest"
-                    },
-                    "osDisk": {
-                        "name": "[concat(parameters('virtualMachineName'),'_OSDisk')]",
-                        "caching": "ReadOnly",
-                        "createOption": "FromImage",
-                        "managedDisk": {
-                            "storageAccountType": "StandardSSD_LRS"
-                        }
-                    },
-                    "dataDisks": [
-                        {
-                            "name": "[concat(parameters('virtualMachineName'), '_DataDisk0')]",
-                            "caching": "ReadWrite",
-                            "createOption": "Empty",
-                            "diskSizeGB": 20,
-                            "managedDisk": {
-                                "storageAccountType": "StandardSSD_LRS"
-                            },
-                            "lun": 0
-                        },
-                                                {
-                            "name": "[concat(parameters('virtualMachineName'), '_DataDisk1')]",
-                            "caching": "ReadWrite",
-                            "createOption": "Empty",
-                            "diskSizeGB": 20,
-                            "managedDisk": {
-                                "storageAccountType": "StandardSSD_LRS"
-                            },
-                            "lun": 1
-                        },
-                                                {
-                            "name": "[concat(parameters('virtualMachineName'), '_DataDisk2')]",
-                            "caching": "ReadWrite",
-                            "createOption": "Empty",
-                            "diskSizeGB": 20,
-                            "managedDisk": {
-                                "storageAccountType": "StandardSSD_LRS"
-                            },
-                            "lun": 2
-                        }
-                    ]
+        "storageProfile": {
+          "osDisk": {
+            "createOption": "fromImage",
+            "managedDisk": {
+              "storageAccountType": "Premium_LRS"
+            }
+          },
+          "imageReference": {
+            "publisher": "MicrosoftSQLServer",
+            "offer": "[parameters('imageOffer')]",
+            "sku": "[parameters('sqlSku')]",
+            "version": "latest"
+          },
+          "copy": [
+            {
+              "name": "dataDisks",
+              "count": "[add(parameters('sqlDataDisksCount'), parameters('sqlLogDisksCount'))]",
+              "input": {
+                "lun": "[copyIndex('dataDisks')]",
+                "createOption": "[variables('dataDisks').createOption]",
+                "caching": "[if(greaterOrEquals(copyIndex('dataDisks'), parameters('sqlDataDisksCount')) ,'None', variables('dataDisks').caching )]",
+                "writeAcceleratorEnabled": "[variables('dataDisks').writeAcceleratorEnabled]",
+                "diskSizeGB": "[variables('dataDisks').diskSizeGB]",
+                "managedDisk": {
+                  "storageAccountType": "[variables('dataDisks').storageAccountType]"
+                }
+              }
+            }
+          ]
                 },
                 "networkProfile": {
                     "networkInterfaces": [
@@ -287,6 +357,35 @@
                 }
             ]
         },
+            {
+      "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+      "apiVersion": "2017-03-01-preview",
+      "name": "[parameters('virtualMachineName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachineName'))]"
+      ],
+      "properties": {
+        "virtualMachineResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachineName'))]",
+        "sqlManagement": "Full",
+        "SqlServerLicenseType": "PAYG",
+        "StorageConfigurationSettings": {
+          "DiskConfigurationType": "[variables('diskConfigurationType')]",
+          "StorageWorkloadType": "[parameters('storageWorkloadType')]",
+          "SQLDataSettings": {
+            "LUNs": "[variables('dataDisksLUNs')]",
+            "DefaultFilePath": "[parameters('dataPath')]"
+          },
+          "SQLLogSettings": {
+            "Luns": "[variables('logDisksLUNs')]",
+            "DefaultFilePath": "[parameters('logPath')]"
+          },
+          "SQLTempDbSettings": {
+            "DefaultFilePath": "[variables('tempDbPath')]"
+          }
+        }
+      }
+    },
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-11-01",

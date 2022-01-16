@@ -13,6 +13,7 @@ $params.Add("adminUsername", $administratorLogin)
 $params.Add("adminPassword", $administratorLoginPassword)
 $params.Add("domainName", $domainName)
 $params.Add("dnsPrefix", $domainPrefix)
+$params.Add("imageOffer", "SQL2016SP1-WS2016")
 
 New-AzResourceGroup `
   -Name $resourceGroupName `
