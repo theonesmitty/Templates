@@ -158,6 +158,9 @@
             "apiVersion": "2019-02-01",
             "name": "[parameters('networkInterfaceName')]",
             "location": "[parameters('location')]",
+            "dependsOn": [
+                   "[parameters('virtualNetworkName')]"
+            ],
             "properties": {
                 "ipConfigurations": [
                     {
@@ -180,7 +183,7 @@
             "name": "[parameters('virtualMachineName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[parameters('networkInterfaceName')]",
+                "[parameters('networkInterfaceName')]"
             ],
             "properties": {
                 "hardwareProfile": {

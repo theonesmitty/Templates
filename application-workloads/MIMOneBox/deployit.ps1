@@ -1,3 +1,4 @@
+Get-AzResourceGroup | ? {$_.ResourceGroupName -like "bicep*"} | Remove-AzResourceGroup -force -AsJob
 $Error.Clear()
 $rnd = (Get-Random -Minimum 100 -Maximum 999)
 $resourceGroupName = "bicepRG1" + $rnd
