@@ -75,27 +75,6 @@
                 "description": "Virtual network address range."
             }
         },
-        "loadBalancerFrontEndIPName": {
-            "type": "string",
-            "defaultValue": "LBFE",
-            "metadata": {
-                "description": "Load balancer front end IP address name."
-            }
-        },
-        "backendAddressPoolName": {
-            "type": "string",
-            "defaultValue": "LBBE",
-            "metadata": {
-                "description": "Backend address pool name."
-            }
-        },
-        "inboundNatRulesName": {
-            "type": "string",
-            "defaultValue": "adRDP",
-            "metadata": {
-                "description": "Inbound NAT rules name."
-            }
-        },
         "networkInterfaceName": {
             "type": "string",
             "defaultValue": "adNic",
@@ -160,19 +139,6 @@
             }
         },
         {
-            "type": "Microsoft.Compute/availabilitySets",
-            "apiVersion": "2019-03-01",
-            "location": "[parameters('location')]",
-            "name": "[parameters('availabilitySetName')]",
-            "properties": {
-                "PlatformUpdateDomainCount": 20,
-                "PlatformFaultDomainCount": 2
-            },
-            "sku": {
-                "name": "Aligned"
-            }
-        },
-        {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-11-01",
             "name": "VNet",
@@ -202,46 +168,6 @@
             }
         },
         {
-            "type": "Microsoft.Network/loadBalancers",
-            "apiVersion": "2019-02-01",
-            "name": "[parameters('loadBalancerName')]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[parameters('publicIPAddressName')]"
-            ],
-            "properties": {
-                "frontendIPConfigurations": [
-                    {
-                        "name": "[parameters('loadBalancerFrontEndIPName')]",
-                        "properties": {
-                            "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddressName'))]"
-                            }
-                        }
-                    }
-                ],
-                "backendAddressPools": [
-                    {
-                        "name": "[parameters('backendAddressPoolName')]"
-                    }
-                ],
-                "inboundNatRules": [
-                    {
-                        "name": "[parameters('inboundNatRulesName')]",
-                        "properties": {
-                            "frontendIPConfiguration": {
-                                "id": "[resourceId('Microsoft.Network/loadBalancers/frontendIPConfigurations', parameters('loadBalancerName'), parameters('loadBalancerFrontEndIPName'))]"
-                            },
-                            "protocol": "Tcp",
-                            "frontendPort": 3389,
-                            "backendPort": 3389,
-                            "enableFloatingIP": false
-                        }
-                    }
-                ]
-            }
-        },
-        {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-02-01",
             "name": "[parameters('networkInterfaceName')]",
@@ -259,17 +185,8 @@
                             "privateIPAddress": "[parameters('privateIPAddress')]",
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
-                            },
-                            "loadBalancerBackendAddressPools": [
-                                {
-                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancerName'), parameters('backendAddressPoolName'))]"
-                                }
-                            ],
-                            "loadBalancerInboundNatRules": [
-                                {
-                                    "id": "[resourceId('Microsoft.Network/loadBalancers/inboundNatRules', parameters('loadBalancerName'), parameters('inboundNatRulesName'))]"
-                                }
-                            ]
+                            }
+
                         }
                     }
                 ]
