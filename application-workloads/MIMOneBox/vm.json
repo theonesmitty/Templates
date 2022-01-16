@@ -9,41 +9,8 @@
     }
   },
   "parameters": {
-    "adminUsername": {
-        "type": "string",
-        "metadata": {
-            "description": "The name of the administrator account of the new VM and domain"
-        }
-    },
-    "adminPassword": {
-        "type": "securestring",
-        "metadata": {
-            "description": "The password for the administrator account of the new VM and domain"
-        }
-    },
-    "domainName": {
-        "type": "string",
-        "metadata": {
-            "description": "The FQDN of the Active Directory Domain to be created"
-        }
-    },
-    "dnsPrefix": {
-        "type": "string",
-        "metadata": {
-            "description": "The DNS prefix for the public IP address used by the Load Balancer"
-        }
-    },
-    "publicIPAddressName": {
-        "type": "string",
-        "defaultValue": "adPublicIP",
-        "metadata": {
-            "description": "Subnet IP range."
-        }
-    },
-
     "location": {
       "type": "string",
-      "defaultValue": "westus3",
       "metadata": {
         "description": "The Azure region where resources in the template should be deployed."
       }
@@ -64,14 +31,14 @@
     },
     "virtualNetworkName": {
       "type": "string",
-      "defaultValue": "MIMVNET",
+      "defaultValue": "network",
       "metadata": {
         "description": "Name of the virtual network."
       }
     },
     "addressPrefix": {
       "type": "string",
-      "defaultValue": "10.0.0.0/16",
+      "defaultValue": "10.2.0.0/16",
       "metadata": {
         "description": "Network subnet and prefix."
       }
@@ -96,16 +63,29 @@
     },
     "vmName": {
       "type": "string",
-      "defaultValue": "MIM01",
       "metadata": {
         "description": "Name of the virtual machine."
       }
     },
     "OSVersion": {
       "type": "string",
-      "defaultValue": "2016-Datacenter",
+      "defaultValue": "2022-datacenter-azure-edition-smalldisk",
       "allowedValues": [
-        "2016-Datacenter"
+        "2012-R2-Datacenter",
+        "2016-Datacenter",
+        "2019-Datacenter",
+        "2019-Datacenter-Core",
+        "2019-Datacenter-Core-smalldisk",
+        "2019-Datacenter-smalldisk",
+        "2022-datacenter",
+        "2022-datacenter-azure-edition-smalldisk",
+        "2022-datacenter-core",
+        "2022-datacenter-core-g2",
+        "2022-datacenter-core-smalldisk",
+        "2022-datacenter-core-smalldisk-g2",
+        "2022-datacenter-g2",
+        "2022-datacenter-smalldisk",
+        "2022-datacenter-smalldisk-g2"
       ],
       "metadata": {
         "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
@@ -141,6 +121,19 @@
       ],
       "metadata": {
         "description": "Availability zone number."
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Username for the Virtual Machine."
+      }
+    },
+    "adminPassword": {
+      "type": "secureString",
+      "minLength": 12,
+      "metadata": {
+        "description": "Password for the Virtual Machine."
       }
     },
     "enableAcceleratedNetworking": {
@@ -181,16 +174,19 @@
       }
     },
     {
-        "type": "Microsoft.Network/publicIPAddresses",
-        "apiVersion": "2020-08-01",
-        "name": "[parameters('publicIPAddressName')]",
-        "location": "[parameters('location')]",
-        "properties": {
-            "publicIPAllocationMethod": "Static",
-            "dnsSettings": {
-                "domainNameLabel": "[parameters('dnsPrefix')]"
-            }
-        }
+      "type": "Microsoft.Network/publicIpAddresses",
+      "apiVersion": "2021-05-01",
+      "name": "[parameters('publicIpName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Standard"
+      },
+      "zones": [
+        "[parameters('zone')]"
+      ],
+      "properties": {
+        "publicIPAllocationMethod": "[parameters('publicIPAllocationMethod')]"
+      }
     },
     {
       "type": "Microsoft.Network/networkInterfaces",
@@ -250,34 +246,9 @@
           },
           "dataDisks": [
             {
-                "name": "[concat(parameters('vmName'), '_DataDisk')]",
-                "caching": "ReadWrite",
-                "createOption": "Empty",
-                "diskSizeGB": 20,
-                "managedDisk": {
-                    "storageAccountType": "[parameters('osDiskStorageAccountType')]"
-                },
-                "lun": 0
-            },
-            {
-                "name": "[concat(parameters('vmName'), '_DataDisk')]",
-                "caching": "ReadWrite",
-                "createOption": "Empty",
-                "diskSizeGB": 100,
-                "managedDisk": {
-                    "storageAccountType": "[parameters('osDiskStorageAccountType')]"
-                },
-                "lun": 1
-            },
-            {
-                "name": "[concat(parameters('vmName'), '_DataDisk')]",
-                "caching": "ReadWrite",
-                "createOption": "Empty",
-                "diskSizeGB": 100,
-                "managedDisk": {
-                    "storageAccountType": "[parameters('osDiskStorageAccountType')]"
-                },
-                "lun": 2
+              "diskSizeGB": 1023,
+              "lun": 0,
+              "createOption": "Empty"
             }
           ]
         },
