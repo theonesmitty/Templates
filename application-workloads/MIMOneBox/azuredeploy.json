@@ -357,39 +357,39 @@
             ]  
    
     },
-        {
-        "type": "Microsoft.Compute/virtualMachines/extensions",
-        "apiVersion": "2021-07-01",
-        "name": "[format('{0}/{1}', parameters('vmName'), 'AzurePolicyforWindows')]",
-        "location": "[parameters('location')]",
-        "properties": {
-            "publisher": "Microsoft.GuestConfiguration",
-            "type": "ConfigurationforWindows",
-            "typeHandlerVersion": "1.0",
-            "autoUpgradeMinorVersion": true,
-            "enableAutomaticUpgrade": true
-        },
-        "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
-        ]
-        },
-        {
-        "type": "Microsoft.GuestConfiguration/guestConfigurationAssignments",
-        "apiVersion": "2020-06-25",
-        "scope": "[format('Microsoft.Compute/virtualMachines/{0}', parameters('vmName'))]",
-        "name": "AzureWindowsBaseline",
-        "location": "[parameters('location')]",
-        "properties": {
-            "guestConfiguration": {
-            "assignmentType": "ApplyAndMonitor",
-            "name": "AzureWindowsBaseline",
-            "version": "1.*"
-            }
-        },
-        "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
-        ]
-        },
+        // {
+        // "type": "Microsoft.Compute/virtualMachines/extensions",
+        // "apiVersion": "2021-07-01",
+        // "name": "[format('{0}/{1}', parameters('vmName'), 'AzurePolicyforWindows')]",
+        // "location": "[parameters('location')]",
+        // "properties": {
+        //     "publisher": "Microsoft.GuestConfiguration",
+        //     "type": "ConfigurationforWindows",
+        //     "typeHandlerVersion": "1.0",
+        //     "autoUpgradeMinorVersion": true,
+        //     "enableAutomaticUpgrade": true
+        // },
+        // "dependsOn": [
+        //     "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+        // ]
+        // },
+        // {
+        // "type": "Microsoft.GuestConfiguration/guestConfigurationAssignments",
+        // "apiVersion": "2020-06-25",
+        // "scope": "[format('Microsoft.Compute/virtualMachines/{0}', parameters('vmName'))]",
+        // "name": "AzureWindowsBaseline",
+        // "location": "[parameters('location')]",
+        // "properties": {
+        //     "guestConfiguration": {
+        //     "assignmentType": "ApplyAndMonitor",
+        //     "name": "AzureWindowsBaseline",
+        //     "version": "1.*"
+        //     }
+        // },
+        // "dependsOn": [
+        //     "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+        // ]
+        // },
         {
         "type": "Microsoft.Resources/deployments",
         "apiVersion": "2018-11-01",
