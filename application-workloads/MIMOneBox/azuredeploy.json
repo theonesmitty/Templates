@@ -255,6 +255,10 @@
       "apiVersion": "2021-07-01",
       "name": "[parameters('vmName')]",
       "location": "[parameters('location')]",
+        "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic', parameters('vmName')))]"
+
+            ],
       "zones": [
         "[parameters('zone')]"
       ],
@@ -329,9 +333,9 @@
             "enabled": true
           }
         }
+
       },
 
-    
         "resources": [
                 {
                     "type": "extensions",

@@ -36,3 +36,4 @@ else {
 
 }
 
+#Get-AzResourceGroup | ? {$_.ResourceGroupName -like "bicep*"} | Remove-AzResourceGroup -force -AsJob
