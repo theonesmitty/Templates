@@ -65,7 +65,7 @@ configuration CreateADPDC
 
         xDisk ADDataDisk {
             DiskNumber = 2
-            DriveLetter = "D"
+            DriveLetter = "F"
             DependsOn = "[xWaitForDisk]Disk2"
         }
 
@@ -78,7 +78,7 @@ configuration CreateADPDC
 
         xDisk ADDataDisk {
             DiskNumber = 3
-            DriveLetter = "E"
+            DriveLetter = "G"
             DependsOn = "[xWaitForDisk]Disk3"
         }
 
@@ -91,7 +91,7 @@ configuration CreateADPDC
 
         xDisk ADDataDisk {
             DiskNumber = 4
-            DriveLetter = "F"
+            DriveLetter = "H"
             DependsOn = "[xWaitForDisk]Disk4"
         }
 
