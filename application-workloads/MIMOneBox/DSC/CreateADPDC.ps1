@@ -56,44 +56,44 @@ configuration CreateADPDC
 	        DependsOn = "[WindowsFeature]DNS"
         }
 
-        xWaitforDisk Disk2
-        {
-            DiskNumber = 2
-            RetryIntervalSec =$RetryIntervalSec
-            RetryCount = $RetryCount
-        }
+        # xWaitforDisk Disk2
+        # {
+        #     DiskNumber = 2
+        #     RetryIntervalSec =$RetryIntervalSec
+        #     RetryCount = $RetryCount
+        # }
 
-        xDisk ADDataDisk {
-            DiskNumber = 2
-            DriveLetter = "F"
-            DependsOn = "[xWaitForDisk]Disk2"
-        }
+        # xDisk ADDataDisk {
+        #     DiskNumber = 2
+        #     DriveLetter = "F"
+        #     DependsOn = "[xWaitForDisk]Disk2"
+        # }
 
-        xWaitforDisk Disk3
-        {
-            DiskNumber = 3
-            RetryIntervalSec =$RetryIntervalSec
-            RetryCount = $RetryCount
-        }
+        # xWaitforDisk Disk3
+        # {
+        #     DiskNumber = 3
+        #     RetryIntervalSec =$RetryIntervalSec
+        #     RetryCount = $RetryCount
+        # }
 
-        xDisk ADDataDisk {
-            DiskNumber = 3
-            DriveLetter = "G"
-            DependsOn = "[xWaitForDisk]Disk3"
-        }
+        # xDisk ADDataDisk {
+        #     DiskNumber = 3
+        #     DriveLetter = "G"
+        #     DependsOn = "[xWaitForDisk]Disk3"
+        # }
 
-        xWaitforDisk Disk4
-        {
-            DiskNumber = 4
-            RetryIntervalSec =$RetryIntervalSec
-            RetryCount = $RetryCount
-        }
+        # xWaitforDisk Disk4
+        # {
+        #     DiskNumber = 4
+        #     RetryIntervalSec =$RetryIntervalSec
+        #     RetryCount = $RetryCount
+        # }
 
-        xDisk ADDataDisk {
-            DiskNumber = 4
-            DriveLetter = "H"
-            DependsOn = "[xWaitForDisk]Disk4"
-        }
+        # xDisk ADDataDisk {
+        #     DiskNumber = 4
+        #     DriveLetter = "H"
+        #     DependsOn = "[xWaitForDisk]Disk4"
+        # }
 
         WindowsFeature ADDSInstall 
         { 
