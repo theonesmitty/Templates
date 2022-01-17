@@ -124,7 +124,7 @@ configuration CreateADPDC
             DatabasePath = "c:\NTDS"
             LogPath = "c:\NTDS"
             SysvolPath = "c:\SYSVOL"
-	        DependsOn = @("[xDisk]ADDataDisk", "[WindowsFeature]ADDSInstall")
+	        #DependsOn = @("[xDisk]ADDataDisk", "[WindowsFeature]ADDSInstall")
         } 
 
    }
