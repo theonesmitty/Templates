@@ -285,36 +285,79 @@
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPassword')]"
                 },
+        // "storageProfile": {
+        //   "osDisk": {
+        //     "createOption": "fromImage",
+        //     "managedDisk": {
+        //       "storageAccountType": "Premium_LRS"
+        //     }
+        //   },
+        //   "imageReference": {
+        //     "publisher": "MicrosoftSQLServer",
+        //     "offer": "[parameters('imageOffer')]",
+        //     "sku": "[parameters('sqlSku')]",
+        //     "version": "latest"
+        //   },
+        //   "copy": [
+        //     {
+        //       "name": "dataDisks",
+        //       "count": "[add(parameters('sqlDataDisksCount'), parameters('sqlLogDisksCount'))]",
+        //       "input": {
+        //         "lun": "[copyIndex('dataDisks')]",
+        //         "createOption": "[variables('dataDisks').createOption]",
+        //         "caching": "[if(greaterOrEquals(copyIndex('dataDisks'), parameters('sqlDataDisksCount')) ,'None', variables('dataDisks').caching )]",
+        //         "writeAcceleratorEnabled": "[variables('dataDisks').writeAcceleratorEnabled]",
+        //         "diskSizeGB": "[variables('dataDisks').diskSizeGB]",
+        //         "managedDisk": {
+        //           "storageAccountType": "[variables('dataDisks').storageAccountType]"
+        //         }
+        //       }
+        //     }
+        //   ]
+        //         },
         "storageProfile": {
-          "osDisk": {
-            "createOption": "fromImage",
-            "managedDisk": {
-              "storageAccountType": "Premium_LRS"
-            }
-          },
           "imageReference": {
             "publisher": "MicrosoftSQLServer",
             "offer": "[parameters('imageOffer')]",
             "sku": "[parameters('sqlSku')]",
             "version": "latest"
           },
-          "copy": [
+          "osDisk": {
+            "createOption": "FromImage",
+            "managedDisk": {
+              "storageAccountType": "[variables('dataDisks').storageAccountType]"
+            }
+          },
+          "dataDisks": [
             {
-              "name": "dataDisks",
-              "count": "[add(parameters('sqlDataDisksCount'), parameters('sqlLogDisksCount'))]",
-              "input": {
-                "lun": "[copyIndex('dataDisks')]",
-                "createOption": "[variables('dataDisks').createOption]",
-                "caching": "[if(greaterOrEquals(copyIndex('dataDisks'), parameters('sqlDataDisksCount')) ,'None', variables('dataDisks').caching )]",
-                "writeAcceleratorEnabled": "[variables('dataDisks').writeAcceleratorEnabled]",
-                "diskSizeGB": "[variables('dataDisks').diskSizeGB]",
-                "managedDisk": {
-                  "storageAccountType": "[variables('dataDisks').storageAccountType]"
-                }
+              "diskSizeGB": 100,
+              "lun": 0,
+              "createOption": "Empty",
+              "managedDisk": 
+              {
+                   "storageAccountType": "[variables('dataDisks').storageAccountType]"
+              }
+            },
+                        {
+              "diskSizeGB": 100,
+              "lun": 1,
+              "createOption": "Empty",
+               "managedDisk": 
+              {
+                   "storageAccountType": "[variables('dataDisks').storageAccountType]"
+              }
+            },            
+            {
+              "diskSizeGB": 100,
+              "lun": 2,
+              "createOption": "Empty",
+              "managedDisk": 
+              {
+                   "storageAccountType": "[variables('dataDisks').storageAccountType]"
               }
             }
           ]
-                },
+        },
                 "networkProfile": {
                     "networkInterfaces": [
                         {
