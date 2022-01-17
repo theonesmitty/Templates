@@ -142,7 +142,7 @@
     },
     "sqlDataDisksCount": {
       "type": "int",
-      "defaultValue": 1,
+      "defaultValue": 2,
       "minValue": 1,
       "maxValue": 8,
       "metadata": {
@@ -194,7 +194,7 @@
       "caching": "ReadOnly",
       "writeAcceleratorEnabled": false,
       "storageAccountType": "Premium_LRS",
-      "diskSizeGB": 1023
+      "diskSizeGB": 100
     },
     "tempDbPath": "D:\\SQLTemp"
 
